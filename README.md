@@ -2,9 +2,9 @@
 
 A local Streamlit dashboard for quickly producing publication-ready statistical graphics with Seaborn/Matplotlib or Plotly.
 Examples:
-<img width="2652" height="1602" alt="publication_chart" src="https://github.com/user-attachments/assets/fdf7af60-4169-4ae9-8006-69f53a26915e" />
-<img width="2554" height="1602" alt="publication_chart (1)" src="https://github.com/user-attachments/assets/0875bb52-1d88-490a-8874-8d43b3ea4205" />
-<img width="2558" height="1602" alt="publication_chart (2)" src="https://github.com/user-attachments/assets/44738314-bf23-42aa-9816-e4bdb586bfb3" />
+<img width="1200" height="800" alt="publication_chart" src="https://github.com/user-attachments/assets/fdf7af60-4169-4ae9-8006-69f53a26915e" />
+<img width="1250" height="800" alt="publication_chart (1)" src="https://github.com/user-attachments/assets/0875bb52-1d88-490a-8874-8d43b3ea4205" />
+<img width="1250" height="800" alt="publication_chart (2)" src="https://github.com/user-attachments/assets/44738314-bf23-42aa-9816-e4bdb586bfb3" />
 
 ## Features
 
