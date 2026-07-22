@@ -16,6 +16,7 @@ A local Streamlit dashboard for quickly producing publication-ready statistical 
 - PNG/JPEG/TIFF/PDF/SVG export for Matplotlib; PNG/JPEG/PDF/SVG/WebP export for Plotly when Kaleido is available
 - Export the plotting configuration, a reproducible Python script, and a complete project containing the data
 - Reload saved projects
+- also read the docs: https://publication-chart-dashboard.readthedocs.io/en/latest/
 
 ## Requirements
 
