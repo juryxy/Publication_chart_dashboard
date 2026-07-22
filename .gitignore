@@ -1,0 +1,8 @@
+.venv/
+.docs-venv/
+__pycache__/
+*.py[cod]
+.streamlit/secrets.toml
+readthedocs/_build/
+.DS_Store
+Thumbs.db
