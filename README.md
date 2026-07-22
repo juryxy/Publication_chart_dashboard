@@ -13,6 +13,7 @@ A local Streamlit dashboard for quickly producing publication-ready statistical 
 - Mean or median summaries
 - Parametric or bootstrap confidence intervals at configurable confidence levels
 - Dynamic titles, labels, dimensions, fonts, line styles, marker styles, opacity, grids, legends, palettes and per-group colors
+- Bold heading and axis-label controls, custom legend titles and entries, adjustable grid thickness, and selectable regression statistics
 - PNG/JPEG/TIFF/PDF/SVG export for Matplotlib; PNG/JPEG/PDF/SVG/WebP export for Plotly when Kaleido is available
 - Export the plotting configuration, a reproducible Python script, and a complete project containing the data
 - Reload saved projects
@@ -67,9 +68,21 @@ python -m streamlit run app.py
 - Layered Seaborn/Matplotlib and Plotly charts
 - Publication palettes, continuous gradients, density coloring, and Jet
 - Overall and grouped linear, quadratic, and cubic regression with confidence intervals
-- Optional Pearson/Spearman correlation, p-values, R-squared, and sample sizes below the legend
+- Optional Pearson/Spearman correlation, p-values, R-squared, and sample sizes below the legend or in an in-plot panel when no legend is shown
 - Project save/reload, figure export, filtered-data export, and reproducible Python-code export
 - Sphinx/Read the Docs documentation in `readthedocs/`
+
+## New appearance and regression controls
+
+The appearance panel now includes:
+
+- Independent **Bold** checkboxes for the heading and custom X/Y axis labels
+- A custom legend-title field
+- Per-entry legend display-name controls that do not alter the source data
+- A grid-thickness control independent of plotted line width
+- Selectable regression annotations: `r`/`rho`, `p`, `r2`, and `n`
+
+Regression statistics remain visible when the legend is disabled or unnecessary for a single series. In that case they are displayed in a compact panel within the plotting area.
 
 ## Documentation
 Dashboard example: 
@@ -80,7 +93,6 @@ Examples:
 <img width="1200" height="800" alt="publication_chart" src="https://github.com/user-attachments/assets/fdf7af60-4169-4ae9-8006-69f53a26915e" />
 <img width="2575" height="1602" alt="publication_chart (4)" src="https://github.com/user-attachments/assets/ea65bb3d-7bc3-4fb8-b3f7-49068e8228b6" />
 <img width="2652" height="1602" alt="publication_chart (3)" src="https://github.com/user-attachments/assets/83339c0e-ab6c-42ef-994e-97ca9f1b7bf8" />
-
 
 
 Build locally with:
