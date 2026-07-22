@@ -1,0 +1,150 @@
+from __future__ import annotations
+
+import base64
+import csv
+import io
+import json
+import math
+from dataclasses import asdict, dataclass, field
+from typing import Any, Iterable
+
+import matplotlib.pyplot as plt
+from matplotlib import cm, colors as mpl_colors
+from matplotlib.ticker import MultipleLocator
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+import seaborn as sns
+import streamlit as st
+from scipy import stats
+
+
+st.set_page_config(page_title="Publication Chart Studio", page_icon="📊", layout="wide")
+
+NONE = "— None —"
+LAYER_OPTIONS = [
+    "Summary line",
+    "Summary points",
+    "Confidence interval",
+    "Raw scatter / jitter",
+    "Subject trajectories",
+    "Box plot",
+    "Violin plot",
+    "Bar plot",
+    "Area plot",
+    "Histogram",
+    "Density",
+    "Strip plot",
+    "Swarm plot",
+    "Trend / regression line",
+]
+DASH_MAP_MPL = {"Solid": "-", "Dashed": "--", "Dotted": ":", "Dash-dot": "-."}
+DASH_MAP_PLOTLY = {"Solid": "solid", "Dashed": "dash", "Dotted": "dot", "Dash-dot": "dashdot"}
+MARKERS = {"Circle": "o", "Square": "s", "Diamond": "D", "Triangle": "^", "X": "X", "Plus": "P"}
+PLOTLY_MARKERS = {"Circle": "circle", "Square": "square", "Diamond": "diamond", "Triangle": "triangle-up", "X": "x", "Plus": "cross"}
+
+
+@dataclass
+class ChartConfig:
+    engine: str = "Seaborn / Matplotlib"
+    analysis_type: str = "Cross-sectional"
+    x: str | None = None
+    y: str | None = None
+    group: str | None = None
+    subject: str | None = None
+    facet_row: str | None = None
+    facet_col: str | None = None
+    x_type: str = "Auto"
+    y_type: str = "Auto"
+    layers: list[str] = field(default_factory=lambda: ["Summary line", "Summary points", "Confidence interval"])
+    estimator: str = "Mean"
+    ci_level: int = 95
+    ci_method: str = "Bootstrap"
+    bootstrap_iterations: int = 2000
+    title: str = ""
+    subtitle: str = ""
+    x_label: str = ""
+    y_label: str = ""
+    width: float = 9.0
+    height: float = 5.5
+    dpi: int = 300
+    font_family: str = "DejaVu Sans"
+    base_font_size: int = 11
+    title_size: int = 16
+    axis_label_size: int = 12
+    x_tick_size: int = 11
+    y_tick_size: int = 11
+    x_tick_interval: float | None = None
+    y_tick_interval: float | None = None
+    line_width: float = 2.0
+    line_style: str = "Solid"
+    marker: str = "Circle"
+    marker_size: float = 7.0
+    alpha: float = 0.85
+    raw_alpha: float = 0.80
+    box_alpha: float = 0.75
+    violin_alpha: float = 0.55
+    summary_alpha: float = 1.0
+    ci_alpha: float = 0.18
+    trajectory_alpha: float = 0.25
+    bar_alpha: float = 0.85
+    area_alpha: float = 0.35
+    jitter: float = 0.18
+    palette: str = "colorblind"
+    single_color: str = "#365F91"
+    use_single_color_override: bool = False
+    ci_color: str = "#365F91"
+    background: str = "#FFFFFF"
+    custom_colors: dict[str, str] = field(default_factory=dict)
+    use_custom_color_overrides: bool = False
+    gradient_mode: str = "Off"
+    gradient_palette: str = "Viridis"
+    gradient_reverse: bool = False
+    gradient_apply_to: str = "Points and summaries"
+    show_colorbar: bool = True
+    gradient_label: str = ""
+    trend_model: str = "Linear"
+    trend_scope: str = "Overall"
+    trend_show_ci: bool = True
+    trend_ci_method: str = "Parametric"
+    trend_line_width: float = 2.2
+    trend_alpha: float = 1.0
+    trend_ci_alpha: float = 0.18
+    trend_show_statistics: bool = False
+    trend_correlation_method: str = "Pearson"
+    trend_statistics_decimals: int = 3
+    show_grid: bool = True
+    grid_axis: str = "Both"
+    show_legend: bool = True
+    legend_position: str = "Inside top-right"
+    rotate_x_labels: int = 0
+    sort_x: bool = True
+    log_y: bool = False
+    show_spines: bool = False
+    x_axis_min: float | None = None
+    x_axis_max: float | None = None
+    y_axis_min: float | None = None
+    y_axis_max: float | None = None
+    x_filter_min: float | None = None
+    x_filter_max: float | None = None
+    y_filter_min: float | None = None
+    y_filter_max: float | None = None
+    selected_groups: list[str] = field(default_factory=list)
+    selected_subjects: list[str] = field(default_factory=list)
+    custom_filters: list[dict[str, str]] = field(default_factory=list)
+    variable_types: dict[str, str] = field(default_factory=dict)
+
+
+def sniff_csv(raw: bytes) -> tuple[pd.DataFrame, str, str]:
+    encodings = ["utf-8-sig", "utf-8", "cp1252", "latin-1"]
+    last_error: Exception | None = None
+    for encoding in encodings:
+        try:
+            text = raw.decode(encoding)
+            sample = text[:10000]
+            try:
+                dialect = csv.Sniffer().sniff(sample, delimiters=",;\t|")
+                sep = dialect.delimiter
+            except csv.Error:
+                counts = {d: sample.count(d) for d in [",", ";", "\t", "|"]}
