@@ -1,10 +1,6 @@
 # Publication Chart Studio
 
 A local Streamlit dashboard for quickly producing publication-ready statistical graphics with Seaborn/Matplotlib or Plotly.
-Examples:
-<img width="1200" height="800" alt="publication_chart" src="https://github.com/user-attachments/assets/fdf7af60-4169-4ae9-8006-69f53a26915e" />
-<img width="1250" height="800" alt="publication_chart (1)" src="https://github.com/user-attachments/assets/0875bb52-1d88-490a-8874-8d43b3ea4205" />
-<img width="1250" height="800" alt="publication_chart (2)" src="https://github.com/user-attachments/assets/44738314-bf23-42aa-9816-e4bdb586bfb3" />
 
 ## Features
 
@@ -75,6 +71,16 @@ python -m streamlit run app.py
 - Sphinx/Read the Docs documentation in `readthedocs/`
 
 ## Documentation
+Dashboard example: 
+<img width="1798" height="871" alt="image" src="https://github.com/user-attachments/assets/edc75ab2-7425-4a74-b27c-1d312eb83731" />
+
+
+Examples:
+<img width="1200" height="800" alt="publication_chart" src="https://github.com/user-attachments/assets/fdf7af60-4169-4ae9-8006-69f53a26915e" />
+<img width="1250" height="800" alt="publication_chart (1)" src="https://github.com/user-attachments/assets/0875bb52-1d88-490a-8874-8d43b3ea4205" />
+<img width="1250" height="800" alt="publication_chart (2)" src="https://github.com/user-attachments/assets/44738314-bf23-42aa-9816-e4bdb586bfb3" />
+
+
 
 Build locally with:
 
