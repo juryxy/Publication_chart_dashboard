@@ -71,18 +71,10 @@ python -m streamlit run app.py
 - Optional Pearson/Spearman correlation, p-values, R-squared, and sample sizes below the legend or in an in-plot panel when no legend is shown
 - Project save/reload, figure export, filtered-data export, and reproducible Python-code export
 - Sphinx/Read the Docs documentation in `readthedocs/`
-
-## New appearance and regression controls
-
-The appearance panel now includes:
-
-- Independent **Bold** checkboxes for the heading and custom X/Y axis labels
 - A custom legend-title field
 - Per-entry legend display-name controls that do not alter the source data
 - A grid-thickness control independent of plotted line width
 - Selectable regression annotations: `r`/`rho`, `p`, `r2`, and `n`
-
-Regression statistics remain visible when the legend is disabled or unnecessary for a single series. In that case they are displayed in a compact panel within the plotting area.
 
 ## Documentation
 Dashboard example: 
