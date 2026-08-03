@@ -30,6 +30,8 @@ The application runs locally. Uploaded data is processed by the local Streamlit 
 
 ## Quick start
 
+Importantly, when starting first time the browser web site may take a minute to load (or if loading is still too slow please simply refresh the loading website).
+
 ### Windows
 
 Extract the repository and double-click `Launch_Dashboard.bat`.
@@ -47,6 +49,7 @@ chmod +x Launch_Dashboard.command
 chmod +x Launch_Dashboard.sh
 ./Launch_Dashboard.sh
 ```
+
 
 The launchers create a local `.venv`, install dependencies, start Streamlit, wait until the server is ready, and then open the browser. To disable automatic browser opening on Linux or macOS, set `DASHBOARD_NO_BROWSER=1`.
 
