@@ -13,6 +13,7 @@ A local Streamlit dashboard for quickly producing publication-ready statistical 
 - Mean or median summaries
 - Parametric or bootstrap confidence intervals at configurable confidence levels
 - Dynamic titles, labels, dimensions, fonts, line styles, marker styles, opacity, grids, legends, palettes and per-group colors
+- Independent multi-select **Group by** and **Color by** controls
 - Bold heading and axis-label controls, custom legend titles and entries, adjustable grid thickness, and selectable regression statistics
 - PNG/JPEG/TIFF/PDF/SVG export for Matplotlib; PNG/JPEG/PDF/SVG/WebP export for Plotly when Kaleido is available
 - Export the plotting configuration, a reproducible Python script, and a complete project containing the data
@@ -50,7 +51,6 @@ chmod +x Launch_Dashboard.sh
 ./Launch_Dashboard.sh
 ```
 
-
 The launchers create a local `.venv`, install dependencies, start Streamlit, wait until the server is ready, and then open the browser. To disable automatic browser opening on Linux or macOS, set `DASHBOARD_NO_BROWSER=1`.
 
 When launching the first time the browser may take about a minute to show the loaded dashboard.
@@ -79,16 +79,24 @@ python -m streamlit run app.py
 - A grid-thickness control independent of plotted line width
 - Selectable regression annotations: `r`/`rho`, `p`, `r2`, and `n`
 
+## Independent grouping and coloring
+
+**Group by variable(s)** and **Color by variable(s)** are separate multi-select controls. Either role can contain one or several variables.
+
+For example, a chart can be grouped by `Site` and `Treatment` while being colored by `Sex`, or it can use a color combination such as `Sex` and `Dose`. When several variables are selected, the dashboard builds labels from the observed value combinations.
+
+Color assignment is determined only by the selected **Color by** variable or variables. This means the same color category keeps the same palette color across different grouping combinations. Plot layers that require one statistical object per series—such as summary lines, confidence intervals, boxes, violins, bars, and regression lines—use the observed combination of the selected grouping and coloring variables so the series remain unambiguous.
+
+Older saved projects that contain the former single grouping/color variable are loaded compatibly by assigning that variable to both roles.
+
 ## Documentation
 Dashboard example: 
 <img width="1798" height="871" alt="image" src="https://github.com/user-attachments/assets/edc75ab2-7425-4a74-b27c-1d312eb83731" />
-
 
 Examples:
 <img width="1200" height="800" alt="publication_chart" src="https://github.com/user-attachments/assets/fdf7af60-4169-4ae9-8006-69f53a26915e" />
 <img width="2575" height="1602" alt="publication_chart (4)" src="https://github.com/user-attachments/assets/ea65bb3d-7bc3-4fb8-b3f7-49068e8228b6" />
 <img width="2652" height="1602" alt="publication_chart (3)" src="https://github.com/user-attachments/assets/83339c0e-ab6c-42ef-994e-97ca9f1b7bf8" />
-
 
 Build locally with:
 
