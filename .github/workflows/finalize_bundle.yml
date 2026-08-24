@@ -1,0 +1,47 @@
+name: Finalize dashboard bundle
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.bundle_upload/**'
+      - '.github/workflows/finalize_bundle.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Assemble and verify bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .bundle_upload/chunk_*.txt > app_bundle/app.b64
+          test "$(wc -c < app_bundle/app.b64)" -eq 49064
+          test "$(git hash-object app_bundle/app.b64)" = "b13214519a9ae5464dda3d43a7c29312c41fa3c2"
+          python - <<'PY'
+          from pathlib import Path
+          import base64, bz2, hashlib
+          encoded = Path('app_bundle/app.b64').read_text(encoding='ascii')
+          source = bz2.decompress(base64.b64decode(encoded))
+          assert len(source) == 189489, len(source)
+          assert hashlib.sha256(source).hexdigest() == 'ebf63fb166c550de7d98415fe045083b9512ee3859f364735fddea0d9287d40b'
+          compile(source.decode('utf-8'), 'app_source.py', 'exec')
+          print('bundle verification passed')
+          PY
+      - name: Commit release and remove staging
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .bundle_upload
+          rm -f .github/workflows/finalize_bundle.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Release Plotly label and grouped tick fixes"
+          git push
