@@ -1,0 +1,42 @@
+name: Finalize dashboard bundle
+
+on:
+  push:
+    paths:
+      - '.bundle_upload/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and clean application bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p app_bundle
+          cat .bundle_upload/chunk_*.txt > app_bundle/app.b64
+          rm -f app_bundle/part_*.b64
+          cat > app.py <<'PY'
+          from pathlib import Path
+          import base64
+          import bz2
+
+          base = Path(__file__).resolve().parent
+          bundle = base / "app_bundle" / "app.b64"
+          if not bundle.exists():
+              raise RuntimeError("Compressed application bundle is missing.")
+          encoded = bundle.read_text(encoding="ascii")
+          source = bz2.decompress(base64.b64decode(encoded)).decode("utf-8")
+          exec(compile(source, str(base / "app_source.py"), "exec"), globals(), globals())
+          PY
+          rm -rf .bundle_upload
+          rm -f .github/workflows/finalize_dashboard_bundle.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Finalize audited multi-layer dashboard bundle"
+          git push
